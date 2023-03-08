@@ -32,7 +32,7 @@ typedef struct {
 
 #ifdef US_KEYBOARD
 /* US keyboard (as HID standard) */
-#define KEYMAP_SIZE (152)
+#define KEYMAP_SIZE (164)
 const KEYMAP keymap[KEYMAP_SIZE] = {
     {0, 0},             /* NUL */
     {0, 0},             /* SOH */
@@ -175,6 +175,18 @@ const KEYMAP keymap[KEYMAP_SIZE] = {
     {0x43, 0},          /* F10 */
     {0x44, 0},          /* F11 */
     {0x45, 0},          /* F12 */
+    {0x68, 0},          /* F13 */
+    {0x69, 0},          /* F14 */
+    {0x6a, 0},          /* F15 */
+    {0x6b, 0},          /* F16 */
+    {0x6c, 0},          /* F17 */
+    {0x6d, 0},          /* F18 */
+    {0x6e, 0},          /* F19 */
+    {0x6f, 0},          /* F20 */
+    {0x70, 0},          /* F21 */
+    {0x71, 0},          /* F22 */
+    {0x72, 0},          /* F23 */
+    {0x73, 0},          /* F24 */
 
     {0x46, 0},          /* PRINT_SCREEN */
     {0x47, 0},          /* SCROLL_LOCK */
@@ -193,7 +205,7 @@ const KEYMAP keymap[KEYMAP_SIZE] = {
 
 #else
 /* UK keyboard */
-#define KEYMAP_SIZE (152)
+#define KEYMAP_SIZE (164)
 const KEYMAP keymap[KEYMAP_SIZE] = {
     {0, 0},             /* NUL */
     {0, 0},             /* SOH */
@@ -336,6 +348,18 @@ const KEYMAP keymap[KEYMAP_SIZE] = {
     {0x43, 0},          /* F10 */
     {0x44, 0},          /* F11 */
     {0x45, 0},          /* F12 */
+    {0x68, 0},          /* F13 */
+    {0x69, 0},          /* F14 */
+    {0x6a, 0},          /* F15 */
+    {0x6b, 0},          /* F16 */
+    {0x6c, 0},          /* F17 */
+    {0x6d, 0},          /* F18 */
+    {0x6e, 0},          /* F19 */
+    {0x6f, 0},          /* F20 */
+    {0x70, 0},          /* F21 */
+    {0x71, 0},          /* F22 */
+    {0x72, 0},          /* F23 */
+    {0x73, 0},          /* F24 */
 
     {0x46, 0},          /* PRINT_SCREEN */
     {0x47, 0},          /* SCROLL_LOCK */
@@ -464,11 +488,6 @@ int USBKeyboard::_putc(int c)
 
 bool USBKeyboard::key_code(uint8_t key, uint8_t modifier)
 {
-    return key_code_raw(keymap[key].usage, modifier);
-}
-
-bool USBKeyboard::key_code_raw(uint8_t key, uint8_t modifier)
-{
     _mutex.lock();
 
     // Send a simulated keyboard keypress. Returns true if successful.
@@ -477,7 +496,7 @@ bool USBKeyboard::key_code_raw(uint8_t key, uint8_t modifier)
     report.data[0] = REPORT_ID_KEYBOARD;
     report.data[1] = modifier;
     report.data[2] = 0;
-    report.data[3] = key;
+    report.data[3] = keymap[key].usage;
     report.data[4] = 0;
     report.data[5] = 0;
     report.data[6] = 0;
